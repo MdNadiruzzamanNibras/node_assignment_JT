@@ -1,7 +1,6 @@
 const User = require("../Model/userSchma");
 
 const postdata = async (req, res) => {
-  // console.log(req.body);
   const { name, email, age } = req.body;
 
   if (!name) {
@@ -14,7 +13,6 @@ const postdata = async (req, res) => {
 
   try {
     const preuser = await User.findOne({ email: email });
-    console.log(preuser);
 
     if (preuser) {
       res.status(422).json("this is user is already present");
@@ -27,7 +25,6 @@ const postdata = async (req, res) => {
 
       await adduser.save();
       res.status(201).json(adduser);
-      console.log(adduser);
     }
   } catch (error) {
     res.status(422).json(error);
@@ -38,7 +35,19 @@ const getAlldata = async (req, res) => {
   try {
     const userdata = await User.find();
     res.status(201).json(userdata);
-    console.log(userdata);
+  } catch (error) {
+    res.status(422).json(error);
+  }
+};
+
+const updateData = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const userUpdate = await User.findByIdAndUpdate(id, req.body, {
+      new: true,
+    });
+    console.log(userUpdate, "userupdate");
+    res.status(201).json(userUpdate);
   } catch (error) {
     res.status(422).json(error);
   }
@@ -47,4 +56,5 @@ const getAlldata = async (req, res) => {
 module.exports = {
   postdata,
   getAlldata,
+  updateData,
 };
